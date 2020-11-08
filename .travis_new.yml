@@ -13,15 +13,16 @@ branches:
 matrix:
     fast_finish: true
     include:
-      - php: 5.6
-        env: deps="low"
-      - php: 7.1
-        env: deps="high"
-      - php: 7.0
-        env: COVERAGE=true
-      - php: 7.1
-      - php: 7.2
-      - php: 5.6
+#      - php: 5.6
+#        env: deps="low"
+#      - php: 7.1
+#        env: deps="high"
+#      - php: 7.0
+#        env: COVERAGE=true
+#      - php: 7.1
+#      - php: 7.2
+#      - php: 5.6
+      - php: nightly
 
 services:
     - redis
@@ -51,7 +52,7 @@ before_install:
       stty cols 120
       PHP=$TRAVIS_PHP_VERSION
       [ -d ~/.composer ] || mkdir ~/.composer
-      export PHPUNIT=$(readlink -f ./phpunit)
+      export PHPUNIT=$(readlink -f ./vendor/bin/phpunit)
       export PHPUNIT_X="$PHPUNIT --exclude-group benchmark"
       export PHPUNIT_COVERAGE="$PHPUNIT_X --coverage-clover=coverage.xml"
       export COMPOSER_UP='composer update --no-progress --no-suggest --ansi --prefer-dist'
@@ -62,7 +63,7 @@ before_install:
           fold=$(echo $title | sed -r 's/[^-_A-Za-z\d]+/./g')
           shift
           echo -e "travis_fold:start:$fold\\n\\e[1;34m$title\\e[0m"
-          bash -xc "$*" 2>&1 &&
+          bash "$*" 2>&1 &&
               echo "########################################" &&
               echo "########################################" &&
               echo -e "\\e[32mOK\\e[0m $title\\n\\ntravis_fold:end:$fold" ||
