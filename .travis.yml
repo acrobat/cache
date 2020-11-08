@@ -13,15 +13,15 @@ branches:
 matrix:
     fast_finish: true
     include:
-#      - php: 5.2
-#        env: deps="low"
-#      - php: 7.4
-#        env: deps="high"
-#      - php: 7.4
-#        env: COVERAGE=true
-#      - php: 7.2
-#      - php: 7.3
-      - php: nightly
+      - php: 7.2
+        env: deps="low"
+      - php: 7.4
+        env: deps="high"
+      - php: 7.4
+        env: COVERAGE=true
+      - php: 7.2
+      - php: 7.3
+      - php: 8.0snapshot
 
 services:
     - redis
