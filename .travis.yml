@@ -76,6 +76,45 @@ before_install:
       INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
       echo memory_limit = -1 >> $INI
 
+      # tpecl is a helper to compile and cache php extensions
+      tpecl () {
+          local ext_name=$1
+          local ext_so=$2
+          local INI=$3
+          local input=${4:-yes}
+          local ext_dir=$(php -r "echo ini_get('extension_dir');")
+          local ext_cache=~/php-ext/$(basename $ext_dir)/$ext_name
+          if [[ -e $ext_cache/$ext_so ]]; then
+          echo extension = $ext_cache/$ext_so >> $INI
+          else
+          rm ~/.pearrc /tmp/pear 2>/dev/null || true
+          mkdir -p $ext_cache
+          echo $input | pecl install -f $ext_name &&
+          cp $ext_dir/$ext_so $ext_cache
+          fi
+        }
+      export -f tpecl
+
+    - |
+      # Install extra PHP extensions
+      for PHP in $TRAVIS_PHP_VERSION $php_extra; do
+          export PHP=$PHP
+          phpenv global $PHP
+          composer self-update
+          composer self-update --2
+          INI=~/.phpenv/versions/$PHP/etc/conf.d/travis.ini
+          if ! php --ri sodium > /dev/null; then
+              tfold ext.libsodium tpecl libsodium sodium.so $INI
+          fi
+          if [[ $PHP = 8.* ]]; then
+              tfold ext.memcached tpecl memcached-3.1.5 memcached.so $INI
+          else
+              tfold ext.mongodb tpecl mongodb-1.6.16 mongodb.so $INI
+          fi
+          tfold ext.apcu tpecl apcu-5.1.19 apcu.so $INI
+          tfold ext.redis tpecl redis-5.2.3 redis.so $INI "no"
+      done
+
 install:
   - if [[ ! $skip ]]; then $COMPOSER_UP; fi
   - |
