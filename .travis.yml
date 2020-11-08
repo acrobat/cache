@@ -63,7 +63,7 @@ before_install:
           fold=$(echo $title | sed -r 's/[^-_A-Za-z\d]+/./g')
           shift
           echo -e "travis_fold:start:$fold\\n\\e[1;34m$title\\e[0m"
-          bash -xc "$*" 2>&1 &&
+          bash -c "$*" 2>&1 &&
               echo "########################################" &&
               echo "########################################" &&
               echo -e "\\e[32mOK\\e[0m $title\\n\\ntravis_fold:end:$fold" ||
