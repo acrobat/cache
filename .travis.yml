@@ -81,7 +81,7 @@ before_install:
           echo -e "travis_fold:start:$fold"
           echo -e "travis_time:start:$id"
           echo -e "\\e[1;34m$title\\e[0m"
-          bash -xc "$*" 2>&1
+          bash "$*" 2>&1
           local ok=$?
           local end=$(nanoseconds)
           echo -e "\\ntravis_time:end:$id:start=$start,finish=$end,duration=$(($end-$start))"
