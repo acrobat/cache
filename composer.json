@@ -47,6 +47,9 @@
         "ext-mongodb": "Mongodb extension required to use the Mongodb adapter",
         "mongodb/mongodb": "Mongodb lib required to use the Mongodb adapter"
     },
+    "replace": {
+        "cache/tag-interop": "*"
+    },
     "conflict": {
         "cache/apc-adapter": "*",
         "cache/apcu-adapter": "*",
