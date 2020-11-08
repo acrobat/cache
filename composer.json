@@ -68,6 +68,9 @@
         "cache/illuminate-adapter": "*",
         "cache/util": "*"
     },
+    "replace": {
+        "cache/tag-interop": "*"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
